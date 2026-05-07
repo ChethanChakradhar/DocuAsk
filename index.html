@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DocuAsk</title>
+    <link rel="stylesheet" href="/static/styles.css?v=5" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-nav">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>
+            <p class="eyebrow">Private document help</p>
+            <h1>DocuAsk</h1>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="ghost-button" id="refreshButton" type="button">Refresh</button>
+          <button class="ghost-button" id="lockButton" type="button">Lock</button>
+          <div>
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Getting ready</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="topbar">
+          <div>
+            <p class="eyebrow">Focused answers, no clutter</p>
+            <h2>Ask your PDF and get only what you need.</h2>
+            <p class="hero-copy">
+              DocuAsk keeps the answer clean. Supporting text stays hidden unless someone chooses to review it.
+            </p>
+          </div>
+        </section>
+
+        <section class="experience-grid">
+          <aside class="file-column" aria-label="Uploaded PDFs">
+            <div class="panel upload-panel" id="upload">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Add context</p>
+                  <h3>Upload PDF</h3>
+                </div>
+              </div>
+
+              <form id="uploadForm">
+                <label class="drop-zone" id="dropZone">
+                  <input id="fileInput" type="file" name="files" accept="application/pdf,.pdf" multiple />
+                  <span class="drop-icon" aria-hidden="true"></span>
+                  <strong>Add a PDF</strong>
+                  <small>Drop it here or choose from your computer.</small>
+                </label>
+                <div class="file-list" id="fileList">No files selected</div>
+                <div class="setup-note" id="setupNote" hidden>
+                  Open <strong>.env</strong>, add a valid <strong>OPENAI_API_KEY</strong>, then restart the app.
+                </div>
+                <div class="billing-note" id="billingNote" hidden>
+                  OpenAI needs billing or available credits before documents can be added.
+                </div>
+                <button class="primary-button" id="uploadButton" type="submit">Add document</button>
+              </form>
+            </div>
+
+            <div class="panel library-panel" id="library">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Ready to use</p>
+                  <h3>Your PDFs</h3>
+                </div>
+                <span class="pill" id="libraryStatus">Ready</span>
+              </div>
+              <div class="document-list" id="documentList"></div>
+            </div>
+          </aside>
+
+          <section class="panel ask-panel focus-panel" id="ask">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Ask in plain English</p>
+                <h3>What do you want to know?</h3>
+              </div>
+            </div>
+
+            <form class="question-row" id="askForm">
+              <textarea
+                id="questionInput"
+                rows="4"
+                placeholder="Example: Where does this person live?"
+              ></textarea>
+              <input id="topKInput" type="hidden" value="1" />
+              <button class="primary-button" id="askButton" type="submit">Ask</button>
+            </form>
+
+            <div class="answer-area" id="answerArea">
+              <div class="empty-state">
+                <span class="answer-glyph" aria-hidden="true"></span>
+                <p>Ask a question. The answer will stay short and focused.</p>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/static/app.js?v=5"></script>
+  </body>
+</html>
