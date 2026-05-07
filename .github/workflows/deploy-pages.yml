@@ -1,0 +1,33 @@
+name: Deploy to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create docs
+        run: |
+          mkdir -p docs
+          echo '<h1>DocuAsk - RAG System</h1>' > docs/index.html
+          echo '<p>Visit: <a href="https://railway.app">Railway</a> or <a href="https://render.com">Render</a></p>' >> docs/index.html
+
+      - name: Deploy
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git fetch origin
+          git checkout --orphan gh-pages
+          git rm -rf .
+          cp -r docs/* .
+          git add .
+          git commit -m "Deploy to Pages"
+          git push origin gh-pages -f
