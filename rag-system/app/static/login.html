@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unlock DocuAsk</title>
+    <link rel="stylesheet" href="/static/styles.css?v=5" />
+  </head>
+  <body class="lock-body">
+    <main class="lock-screen">
+      <section class="lock-card" aria-labelledby="lockTitle">
+        <div class="brand lock-brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>
+            <p class="eyebrow">Protected documents</p>
+            <h1 id="lockTitle">Enter your passcode</h1>
+          </div>
+        </div>
+
+        <p class="lock-copy">
+          DocuAsk is locked so only authorized people can open the document space.
+        </p>
+
+        <form id="unlockForm" class="unlock-form">
+          <label for="passcodeInput">4-digit passcode</label>
+          <input
+            id="passcodeInput"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="4"
+            pattern="[0-9]{4}"
+            placeholder="0000"
+            type="password"
+            required
+          />
+          <button class="primary-button" id="unlockButton" type="submit">Unlock</button>
+          <p class="lock-message" id="lockMessage" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const form = document.querySelector("#unlockForm");
+      const input = document.querySelector("#passcodeInput");
+      const button = document.querySelector("#unlockButton");
+      const message = document.querySelector("#lockMessage");
+
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "").slice(0, 4);
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        message.textContent = "";
+
+        if (input.value.length !== 4) {
+          message.textContent = "Please enter all 4 digits.";
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Checking...";
+
+        try {
+          const response = await fetch("/auth/unlock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ passcode: input.value }),
+          });
+          const payload = await response.json();
+
+          if (!response.ok) {
+            throw new Error(payload.detail || "That passcode did not work.");
+          }
+
+          window.location.href = "/?unlocked=1";
+        } catch (error) {
+          message.textContent = error.message;
+          input.select();
+        } finally {
+          button.disabled = false;
+          button.textContent = "Unlock";
+        }
+      });
+    </script>
+  </body>
+</html>

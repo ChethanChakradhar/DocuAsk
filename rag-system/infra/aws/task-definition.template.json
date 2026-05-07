@@ -1,0 +1,47 @@
+{
+  "family": "rag-api-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "<ecsTaskExecutionRoleArn>",
+  "taskRoleArn": "<ecsTaskRoleArn>",
+  "containerDefinitions": [
+    {
+      "name": "rag-api",
+      "image": "<ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/rag-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "OPENAI_EMBEDDING_MODEL",
+          "value": "text-embedding-3-small"
+        },
+        {
+          "name": "OPENAI_CHAT_MODEL",
+          "value": "gpt-4o-mini"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "OPENAI_API_KEY",
+          "valueFrom": "<secrets-manager-arn>"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-api",
+          "awslogs-region": "<REGION>",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

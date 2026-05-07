@@ -1,0 +1,12 @@
+[
+  {
+    "question": "What is the refund policy for annual subscriptions?",
+    "expected_answer_contains": ["refund", "annual"],
+    "expected_sources": ["policy.pdf"]
+  },
+  {
+    "question": "Who approves security exceptions in production?",
+    "expected_answer_contains": ["security", "approves"],
+    "expected_sources": ["security-handbook.pdf"]
+  }
+]
